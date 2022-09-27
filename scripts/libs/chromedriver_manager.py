@@ -3,7 +3,7 @@ import re
 import urllib.request
 import xml.etree.ElementTree as ET
 from glob import glob
-from scripts.os_system import OSSystem
+from scripts.libs.os_system import OSSystem
 
 class ChromedriverManager:
     CHROME  = "google-chrome"
@@ -58,7 +58,6 @@ class ChromedriverManager:
 
     @staticmethod
     def download_chromedriver(path_save_chromedriver:str) -> None:
-        print(path_save_chromedriver)
         os.makedirs(path_save_chromedriver, exist_ok=True)
         os_url_mapping = {
             "linux": "linux64",
@@ -86,9 +85,7 @@ class ChromedriverManager:
     @staticmethod
     def manage_chromedriver(path_chromedriver:str) -> None:
         if ChromedriverManager.verify_chrome_versions_compatibility(path_chromedriver):
-            print("matched")
             return path_chromedriver
-        print(os.path.isfile(path_chromedriver))
         if os.path.isfile(path_chromedriver):
             path_save_chromedriver = os.path.dirname(path_chromedriver)
             os.remove(path_chromedriver)            
