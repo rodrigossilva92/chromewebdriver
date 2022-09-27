@@ -2,7 +2,8 @@ import os
 import re
 import urllib.request
 import xml.etree.ElementTree as ET
-from system import OSSystem
+from glob import glob
+from scripts.os_system import OSSystem
 
 class ChromedriverManager:
     CHROME  = "google-chrome"
@@ -57,6 +58,7 @@ class ChromedriverManager:
 
     @staticmethod
     def download_chromedriver(path_save_chromedriver:str) -> None:
+        os.makedirs(path_save_chromedriver, exist_ok=True)
         os_url_mapping = {
             "linux": "linux64",
             "win": "win32"
@@ -71,10 +73,14 @@ class ChromedriverManager:
         chromedriver_download_version = ChromedriverManager.get_chromedriver_matching_available_version(chrome_major_version)
         url = "https://chromedriver.storage.googleapis.com/" + chromedriver_download_version + '/chromedriver_' + os_type + ".zip"
         file = OSSystem.download_file_from_url(url)
+        removable_files = glob(os.path.join(path_save_chromedriver, "chromedriver*"))
+        for rf in removable_files:
+            os.remove(rf)
         OSSystem.extract_file(file, path_save_chromedriver) 
         file_name = file_name_mapping[OSSystem.get_os_type()]
         path_chromedriver = os.path.join(path_save_chromedriver, file_name)
         os.chmod(path_chromedriver, 0o744)
+        return path_chromedriver
             
     @staticmethod
     def manage_chromedriver(path_chromedriver:str) -> None:
@@ -87,9 +93,4 @@ class ChromedriverManager:
             path_save_chromedriver = path_chromedriver
         os.makedirs(path_save_chromedriver, exist_ok=True)
         ChromedriverManager.download_chromedriver(path_save_chromedriver)
-    
-
-# print(ChromedriverManager.get_chrome_version())
-# print(OSSystem.verify_powershell())
-
-ChromedriverManager.download_chromedriver('.')
+        

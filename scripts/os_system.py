@@ -66,4 +66,4 @@ class OSSystem:
     @staticmethod
     def extract_file(file:BytesIO, path:str) -> None:
         with zipfile.ZipFile(file, 'r') as zip_file:
-            zip_file.extractall(path)
+            zip_file.extractall(path, )
