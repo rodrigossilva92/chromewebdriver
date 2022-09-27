@@ -18,20 +18,9 @@ class Chromedriver:
             pass
 
     def __start_driver(self) -> bool:
-
-        if self.__path_chromedriver is None:
-            self.__path_chromedriver = ChromedriverManager.download_chromedriver(Chromedriver.PATH_SAVE_CHROMEDRIVER)
-        
+       
+        self.__path_chromedriver = ChromedriverManager.manage_chromedriver(self.__path_chromedriver)
         chrome_service = ChromeService(executable_path=self.__path_chromedriver)
         chrome_options = ChromeOptions()
+        self.driver = Chrome(service=chrome_service, options=chrome_options)
 
-        try:
-            self.driver = Chrome(service=chrome_service, options=chrome_options)
-        except WebDriverException:
-            try:
-                ChromedriverManager.manage_chromedriver(self.__path_chromedriver)
-                self.driver = Chrome(service=chrome_service, options=chrome_options)
-            except Exception as e:
-                print(e)
-        except Exception as e:
-            print(e)

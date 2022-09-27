@@ -58,6 +58,7 @@ class ChromedriverManager:
 
     @staticmethod
     def download_chromedriver(path_save_chromedriver:str) -> None:
+        print(path_save_chromedriver)
         os.makedirs(path_save_chromedriver, exist_ok=True)
         os_url_mapping = {
             "linux": "linux64",
@@ -85,12 +86,14 @@ class ChromedriverManager:
     @staticmethod
     def manage_chromedriver(path_chromedriver:str) -> None:
         if ChromedriverManager.verify_chrome_versions_compatibility(path_chromedriver):
-            return
+            print("matched")
+            return path_chromedriver
+        print(os.path.isfile(path_chromedriver))
         if os.path.isfile(path_chromedriver):
-            os.remove(path_chromedriver)
             path_save_chromedriver = os.path.dirname(path_chromedriver)
+            os.remove(path_chromedriver)            
         else:
-            path_save_chromedriver = path_chromedriver
+            path_save_chromedriver = os.path.dirname(path_chromedriver)
         os.makedirs(path_save_chromedriver, exist_ok=True)
-        ChromedriverManager.download_chromedriver(path_save_chromedriver)
+        return ChromedriverManager.download_chromedriver(path_save_chromedriver)
         
